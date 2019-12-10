@@ -48,6 +48,27 @@ exports.getUserById = function(req, res) {
 
 };
 
+exports.login = function(req, res) {
+    var body = req.body;
+
+    User.findOne({ 'email': body.email }, function(err, user) {
+        if(err) {
+            console.log('Login fail');
+
+            res.status(500);
+        } else {
+            if(user == null) {
+                res.status(401).end();
+            } else if(body.password == user.password) {
+                res.json({ message: "Success" });
+            } else {
+                res.json({ message: "Wrong password" });
+            }
+        }
+    });
+
+};
+
 exports.parId = function(req, res, next, id) {
     User.findOne({ id: id }, function(err, user) {
         if(err) {
