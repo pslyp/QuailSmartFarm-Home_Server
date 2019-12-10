@@ -10,10 +10,8 @@ exports.login = function(req, res) {
             if(user == null) {
                 res.status(401).end();
             } else if(body.password == user.password) {
-                res.status(200);
                 res.json({ message: "Success" });
             } else {
-                res.status(200);
                 res.json({ message: "Wrong password" });
             }
         }
