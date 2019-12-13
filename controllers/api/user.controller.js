@@ -19,7 +19,7 @@ exports.create = function(req, res) {
     });
 };
 
-exports.getAllUser = function(req, res) {
+exports.getAll = function(req, res) {
 
     User.find({}, { '_id': 0, 'id': 1, 'username': 1, 'email': 1, "devices": 1 }, function(err, user) {
         if(err) {
@@ -34,7 +34,7 @@ exports.getAllUser = function(req, res) {
 
 };
 
-exports.getUserById = function(req, res) {
+exports.getById = function(req, res) {
 
     User.findOne({ id: req.user.id }, { '_id': 0, 'username': 1, 'email': 1, 'devices': 1 }, function(err, user) {
         if(err) {

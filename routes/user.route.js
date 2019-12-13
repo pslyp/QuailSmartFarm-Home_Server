@@ -4,10 +4,10 @@ module.exports = function(app) {
     const BASE_URL = '/api/v1';
 
     app.route(BASE_URL + '/user')
-        .get(user.getAllUser)
+        .get(user.getAll)
         .post(user.create);
     app.route(BASE_URL + '/user/:id')
-        .get(user.getUserById);
+        .get(user.getById);
     app.post(BASE_URL + '/user/login', user.login);
     
     app.param('id', user.parId);
