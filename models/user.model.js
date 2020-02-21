@@ -8,7 +8,12 @@ var userSchema = new Schema({
     password: String,
     devices: [{
         token: String,
-        name: String
+        name: String,
+        brightness: Number,
+        tempMin: Number,
+        tempMax: Number,
+        timeStart: String,
+        timeStop: String
     }]
 });
 

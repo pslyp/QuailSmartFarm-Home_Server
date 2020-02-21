@@ -20,7 +20,7 @@ exports.getAll = function(req, res) {
             res.status(500).end();
             throw err;
         } else {
-            res.json({ users: user });
+            res.json(user);
         }
     });
 };
@@ -61,9 +61,11 @@ exports.login = function(req, res) {
             if(user == null) {
                 res.status(401).end();
             } else if(body.password == user.password) {
-                res.json({ message: "Success" });
+                // res.json({ message: "Success" });
+                res.status(416).end();
             } else {
-                res.json({ message: "Wrong password" });
+                // res.json({ message: "Wrong password" });
+                res.status(417).end();
             }
         }
     });
@@ -87,8 +89,3 @@ exports.parId = function(req, res, next, id) {
         }
     });
 };
-
-var response = (res, code, value) => {
-    res.status(code);
-    res.json({ message: value });
-}

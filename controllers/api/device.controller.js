@@ -50,9 +50,7 @@ exports.getAll = function(req, res) {
 
     Device.find({}, { '_id': 0, '__v': 0 }, function(err, device) {
         if(err) {
-            console.log("Find device fail");
-
-            res.status(500);
+            res.status(500).end();
         } else {
             res.json(device);
         }
