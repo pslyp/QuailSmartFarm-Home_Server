@@ -4,12 +4,13 @@ var Schema = mongoose.Schema;
 var deviceSchema = new Schema({
     token: String,
     data: [{
-        date: String,
         fanSta: Number,
+        feedSta: Number,
         lampSta: Number,
         waterSta: Number,
         brightness: Number,
-        temperature: Number
+        temperature: Number,
+        dated: String
     }],
     created: {
         type: Date,

@@ -4,10 +4,11 @@ var app = express();
 
 var ejs = require('./configs/ejs')(app);
 
-var port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 
-app.listen(port, function() {
-    console.log('Start server on port: ' + port);
+app.listen(PORT, HOST, () => {
+    console.log(`Running on http://${HOST}:${PORT}`);
 });
 
 module.exports = app;

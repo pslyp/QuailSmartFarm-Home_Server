@@ -6,54 +6,69 @@ exports.create = function(req, res) {
     device.save(function(err) {
         if(err) {
             console.log('Create device Fail');
-            res.status(204);
+
+            res.status(500);
             res.json({ message: "Fail"});
-            res.end();
         } else {
             console.log('Create device success');
-            res.status(200);
-            res.json({ message: "Success"});
-            res.end();
+
+            res.json({ message: "success"});
         }
     });
 
 };
 
 exports.insert = function(req, res) {
+    var body = req.body;
     var token = req.params.token;
 
-    Device.findOneAndUpdate({ token: token }, { $push: { data: req.body } }, function(err) {
+    var dataArray = { 
+        date: body.date,
+        fanSta: body.fanSta, 
+        feedSta: body.feedSta, 
+        lampSta: body.lampSta, 
+        waterSta: body.waterSta, 
+        brightness: body.brightness,
+        temperature: body.temperature
+    };
+
+    Device.findOneAndUpdate({ token: token }, { $push: { data: dataArray } }, function(err) {
         if(err) {
-            res.status(400);
+            console.log("Update device fail");
+
+            res.status(500);
             res.json({ message: "Fail"} );
         } else {
-            res.status(200);
+            console.log("Update device success");
+
             res.json({ message: "Success" });
         } 
     });
 };
 
-exports.findAll = function(req, res) {
+exports.getAll = function(req, res) {
 
-    Device.find({}, { '_id': 0 }, function(err, device) {
+    Device.find({}, { '_id': 0, '__v': 0 }, function(err, device) {
         if(err) {
             console.log("Find device fail");
+
+            res.status(500);
         } else {
-            res.status(200);
             res.json(device);
         }
     });
 
 };
 
-exports.findById = function(req, res) {
+exports.getByToken = function(req, res) {
 
-    Device.findOne({ 'token': req.params.token }, { '_id': 0 }, function(err, device) {
+    Device.findOne({ 'token': req.params.token }, { '_id': 0, 'token': 0, '__v': 0 }, function(err, device) {
         if(err) {
             console.log("Find one device fail");
+
+            res.status(500);
         } else {
             if(device != null) {
-                res.status(200);
                 res.json(device);
             } else {
                 res.status(204).end();

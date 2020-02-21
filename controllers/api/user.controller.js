@@ -5,16 +5,10 @@ exports.create = function(req, res) {
 
     user.save(function(err) {
         if(err) {
-            console.log('Create User Fail');
-            console.log(err);
-
-            res.status(500);
-            res.json({ message: "fail" });
+            res.status(500).end();
+            throw err;
         } else {
-            console.log('Create User Success');
-
-            res.status(201);
-            res.json({ message: "success" });
+            res.status(201).end();
         }
     });
 };
@@ -23,29 +17,38 @@ exports.getAll = function(req, res) {
 
     User.find({}, { '_id': 0, 'id': 1, 'username': 1, 'email': 1, "devices": 1 }, function(err, user) {
         if(err) {
-            console.log('Fail');
-
-            res.status(500);
-            res.json({ message: "fail" });
+            res.status(500).end();
+            throw err;
         } else {
-            res.json(user);
+            res.json({ users: user });
         }
     });
-
 };
 
 exports.getById = function(req, res) {
 
     User.findOne({ id: req.user.id }, { '_id': 0, 'username': 1, 'email': 1, 'devices': 1 }, function(err, user) {
         if(err) {
-            console.log('Find One By ID Fail');
-
-            res.status(500);
+            res.status(500).end();
+            throw err;
         } else {
             res.json(user);
         }
     });
+};
 
+exports.updateDevice = function(req, res) {
+
+    var dataArr = { token: req.body.token, name: req.body.name };
+
+    User.findOneAndUpdate({ id: req.user.id }, { $push: { devices: dataArr } }, function(err, user) {
+        if(err) {
+            res.status(500).end();
+            throw err;
+        } else {
+            res.status(204).end();
+        }
+    });
 };
 
 exports.login = function(req, res) {
@@ -53,9 +56,7 @@ exports.login = function(req, res) {
 
     User.findOne({ 'email': body.email }, function(err, user) {
         if(err) {
-            console.log('Login fail');
-
-            res.status(500);
+            res.status(500).end();
         } else {
             if(user == null) {
                 res.status(401).end();
@@ -86,3 +87,8 @@ exports.parId = function(req, res, next, id) {
         }
     });
 };
+
+var response = (res, code, value) => {
+    res.status(code);
+    res.json({ message: value });
+}
