@@ -6,15 +6,16 @@ var userSchema = new Schema({
     username: String,
     email: String,
     password: String,
-    devices: [{
-        token: String,
-        name: String,
-        brightness: Number,
-        tempMin: Number,
-        tempMax: Number,
-        timeStart: String,
-        timeStop: String
-    }]
+    devices: [{ type: Schema.Types.ObjectId, ref: 'Device' }]
+    // devices: [{
+    //     token: String,
+    //     name: String,
+    //     brightness: Number,
+    //     tempMin: Number,
+    //     tempMax: Number,
+    //     timeStart: String,
+    //     timeStop: String
+    // }]
 });
 
 mongoose.model('User', userSchema);

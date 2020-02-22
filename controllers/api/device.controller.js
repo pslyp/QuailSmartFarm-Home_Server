@@ -1,21 +1,28 @@
 var Device = require('mongoose').model('Device');
+const User = require('mongoose').model('User');
 
 exports.create = function(req, res) {
     var device = new Device(req.body);
 
-    device.save(function(err) {
+    var d = device.save(function(err) {
         if(err) {
             console.log('Create device Fail');
 
             res.status(500);
             res.json({ message: "Fail"});
         } else {
-            console.log('Create device success');
 
-            res.json({ message: "success"});
+            const user = User.findOneAndUpdate({ id: req.query.userId }, { $push: { devices: device._id } }, (err) => {
+                // res.json(user)
+                if(err) {
+                    throw err
+                } else {
+                    console.log('sdfsd')
+                    res.status(200).end()
+                }
+            })
         }
-    });
-
+    });  
 };
 
 exports.insert = function(req, res) {

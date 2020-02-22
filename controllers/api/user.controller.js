@@ -5,8 +5,7 @@ exports.create = function(req, res) {
 
     user.save(function(err) {
         if(err) {
-            res.status(500).end();
-            throw err;
+            res.status(500).send(err);
         } else {
             res.status(201).end();
         }
@@ -20,7 +19,7 @@ exports.getAll = function(req, res) {
             res.status(500).end();
             throw err;
         } else {
-            res.json(user);
+            res.json(user)
         }
     });
 };
