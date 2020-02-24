@@ -2,6 +2,24 @@ var Device = require('mongoose').model('Device');
 const User = require('mongoose').model('User');
 
 
+function checkID(req, res, next) {
+    const userId = req.query.userId;
+
+    if(userId == null) {
+        res.status(400).end();
+    } else {
+        User.findOne({ id: userId }, function(err, user) {
+            if(err)
+                throw err;
+            else
+                if(user != null)
+                    next();
+                else
+                    res.status(204).end();
+        });
+    }
+};
+
 var device;
 function createDevice(req, res, next) {
     device = new Device(req.body);
@@ -19,11 +37,11 @@ function updateDeviceAtUser(req, res) {
         if(err)
             throw err;
         else
-            res.status(204).end();
+            res.end();
     });
 };
 
-exports.create = [createDevice, updateDeviceAtUser];
+exports.create = [checkID, createDevice, updateDeviceAtUser];
 
 exports.updateByToken = function(req, res) {
     const token = req.params.token;
@@ -87,8 +105,8 @@ exports.getAll = function(req, res) {
 };
 
 exports.getByToken = function(req, res) {
-
-    Device.findOne({ 'token': req.params.token }, { '_id': 0, 'token': 0, '__v': 0 }, function(err, device) {
+    const token = req.params.token;
+    Device.findOne({ token: token }, { '_id': 0, 'token': 0, '__v': 0 }, function(err, device) {
         if(err) {
             console.log("Find one device fail");
 
