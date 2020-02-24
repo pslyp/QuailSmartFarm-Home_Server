@@ -1,29 +1,50 @@
 var Device = require('mongoose').model('Device');
 const User = require('mongoose').model('User');
 
-exports.create = function(req, res) {
-    var device = new Device(req.body);
 
-    var d = device.save(function(err) {
-        if(err) {
-            console.log('Create device Fail');
+var device;
+function createDevice(req, res, next) {
+    device = new Device(req.body);
 
-            res.status(500);
-            res.json({ message: "Fail"});
-        } else {
-
-            const user = User.findOneAndUpdate({ id: req.query.userId }, { $push: { devices: device._id } }, (err) => {
-                // res.json(user)
-                if(err) {
-                    throw err
-                } else {
-                    console.log('sdfsd')
-                    res.status(200).end()
-                }
-            })
-        }
-    });  
+    device.save(function(err) {
+        if(err)
+            throw err;
+        else
+            next();
+    });
 };
+
+function updateDeviceAtUser(req, res) {
+    User.findOneAndUpdate({ id: req.query.userId }, { $push: { devices: device._id } }, function(err) {
+        if(err)
+            throw err;
+        else
+            res.status(204).end();
+    });
+};
+
+exports.create = [createDevice, updateDeviceAtUser];
+
+exports.updateByToken = function(req, res) {
+    const token = req.params.token;
+    const body = req.body;
+    
+    const dataArr = {
+        name: body.name,
+        brightness: body.brightness,
+        tempMin: body.tempMin,
+        tempMax: body.tempMax,
+        timeStart: body.timeStart,
+        timeStop: body.timeStop
+    }
+
+    Device.findOneAndUpdate({ token: token }, dataArr, function(err) {
+        if(err)
+            throw err;
+        else
+            res.status(204).end();
+    })
+}
 
 exports.insert = function(req, res) {
     var body = req.body;
@@ -39,7 +60,7 @@ exports.insert = function(req, res) {
         temperature: body.temperature
     };
 
-    Device.findOneAndUpdate({ token: token }, { $push: { data: dataArray } }, function(err) {
+    Device.findOneAndUpdate({ token: 'device1' }, { $push: { data: dataArray } }, function(err) {
         if(err) {
             console.log("Update device fail");
 

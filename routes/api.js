@@ -15,4 +15,6 @@ module.exports = (app) => {
     app.route(ROOT + '/device')
         .get(device.getAll)
         .post(device.create)
+    app.route(ROOT + '/device/:token')
+        .put(device.updateByToken)
 }

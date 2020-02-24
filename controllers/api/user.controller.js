@@ -14,14 +14,14 @@ exports.create = function(req, res) {
 
 exports.getAll = function(req, res) {
 
-    User.find({}, { '_id': 0, 'id': 1, 'username': 1, 'email': 1, "devices": 1 }, function(err, user) {
+    User.find({}, { '_id': 0, 'id': 1, 'username': 1, 'email': 1 }, function(err, user) {
         if(err) {
             res.status(500).end();
             throw err;
         } else {
             res.json(user)
         }
-    });
+    }).populate('devices');
 };
 
 exports.getById = function(req, res) {
