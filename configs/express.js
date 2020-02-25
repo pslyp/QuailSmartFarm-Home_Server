@@ -1,6 +1,4 @@
-var express = require('express');
-
-// var route = require('../routes/user.route');
+const express = require('express');
 
 module.exports = function() {
     const app = express();
@@ -14,7 +12,6 @@ module.exports = function() {
 
     require('../routes/index.route')(app);
     require('../routes/login.route')(app);
-    // require('../routes/device.route')(app);
     // require('../routes/test.route')(app);
 
     require('../routes/api')(app);

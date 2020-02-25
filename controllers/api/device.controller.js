@@ -1,9 +1,10 @@
-var Device = require('mongoose').model('Device');
+const Device = require('mongoose').model('Device');
 const User = require('mongoose').model('User');
 
 
+var userId;
 function checkID(req, res, next) {
-    const userId = req.query.userId;
+    userId = req.query.userId;
 
     if(userId == null) {
         res.status(400).end();
@@ -33,7 +34,9 @@ function createDevice(req, res, next) {
 };
 
 function updateDeviceAtUser(req, res) {
-    User.findOneAndUpdate({ id: req.query.userId }, { $push: { devices: device._id } }, function(err) {
+    // const userId = req.query.userId;
+
+    User.findOneAndUpdate({ id: userId }, { $push: { devices: device._id } }, function(err) {
         if(err)
             throw err;
         else
@@ -44,10 +47,10 @@ function updateDeviceAtUser(req, res) {
 exports.create = [checkID, createDevice, updateDeviceAtUser];
 
 exports.updateByToken = function(req, res) {
-    const token = req.params.token;
+    const _token = req.params.token;
     const body = req.body;
     
-    const dataArr = {
+    const dataVal = {
         name: body.name,
         brightness: body.brightness,
         tempMin: body.tempMin,
@@ -56,7 +59,7 @@ exports.updateByToken = function(req, res) {
         timeStop: body.timeStop
     }
 
-    Device.findOneAndUpdate({ token: token }, dataArr, function(err) {
+    Device.findOneAndUpdate({ token: _token }, dataVal, function(err) {
         if(err)
             throw err;
         else
@@ -64,37 +67,9 @@ exports.updateByToken = function(req, res) {
     })
 }
 
-exports.insert = function(req, res) {
-    var body = req.body;
-    var token = req.params.token;
-
-    var dataArray = { 
-        date: body.date,
-        fanSta: body.fanSta, 
-        feedSta: body.feedSta, 
-        lampSta: body.lampSta, 
-        waterSta: body.waterSta, 
-        brightness: body.brightness,
-        temperature: body.temperature
-    };
-
-    Device.findOneAndUpdate({ token: 'device1' }, { $push: { data: dataArray } }, function(err) {
-        if(err) {
-            console.log("Update device fail");
-
-            res.status(500);
-            res.json({ message: "Fail"} );
-        } else {
-            console.log("Update device success");
-
-            res.json({ message: "Success" });
-        } 
-    });
-};
-
 exports.getAll = function(req, res) {
 
-    Device.find({}, { '_id': 0, '__v': 0 }, function(err, device) {
+    Device.find({}, { _id: 0, __v: 0 }, function(err, device) {
         if(err) {
             res.status(500).end();
         } else {
@@ -105,12 +80,11 @@ exports.getAll = function(req, res) {
 };
 
 exports.getByToken = function(req, res) {
-    const token = req.params.token;
-    Device.findOne({ token: token }, { '_id': 0, 'token': 0, '__v': 0 }, function(err, device) {
+    const _token = req.params.token;
+    
+    Device.findOne({ token: _token }, { _id: 0, token: 0, __v: 0 }, function(err, device) {
         if(err) {
-            console.log("Find one device fail");
-
-            res.status(500);
+            res.status(500).end();
         } else {
             if(device != null) {
                 res.json(device);

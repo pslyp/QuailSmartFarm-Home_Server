@@ -1,7 +1,16 @@
 const Data = require('mongoose').model('Data');
 
 exports.create = (req, res) => {
-    const data = new Data();
+    const body = req.body;
+
+    const data = new Data({
+        token: body.token,
+        data: [{ 
+            datetime: body.datetime,
+            brightness: body.brightness,
+            temperature: body.temperature
+        }]
+    });
 
     data.save((err) => {
         if(err) {
@@ -14,7 +23,7 @@ exports.create = (req, res) => {
 
 exports.getAll = (req, res) => {
 
-    Data.find({}, { '_id': 0, '__v': 0 }, (err, data) => {
+    Data.find({}, { _id: 0, __v: 0 }, (err, data) => {
         if(err) {
             throw err;
         } else {
@@ -23,7 +32,18 @@ exports.getAll = (req, res) => {
     });
 };
 
-exports.update = (req, res) => {
+exports.getByToken = (req, res) => {
+    const token = req.params.token;
+
+    Data.findOne({ token: token }, { _id: 0, __v: 0 }, (err, data) => {
+        if(err)
+            throw err;
+        else
+            res.json(data);
+    });
+};
+
+exports.updateByToken = (req, res) => {
     const body = req.body;
     const token = req.params.token;
 
