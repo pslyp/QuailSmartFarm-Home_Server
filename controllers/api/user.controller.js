@@ -8,7 +8,7 @@ exports.create = function(req, res) {
         if(err) {
             res.status(500).send(err);
         } else {
-            res.json({ status: 201 });
+            res.status(201).end();
         }
     });
 };
