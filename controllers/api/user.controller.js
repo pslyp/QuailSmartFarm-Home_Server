@@ -55,7 +55,12 @@ exports.login = function(req, res) {
                 const payload = { id: user.id, name: user.username }
                 const token = verify.genToken(payload)
 
-                res.json({ id: user.id, token: token })
+                res.json({ 
+                    status: 200,
+                    id: user.id,
+                    username: user.username,
+                    token: token 
+                })
             }
         }
     });
