@@ -16,7 +16,7 @@ function checkID(req, res, next) {
                 if(user != null)
                     next();
                 else
-                    res.status(204).end();
+                    res.status(404).end();
         });
     }
 };

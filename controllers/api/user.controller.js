@@ -8,7 +8,7 @@ exports.create = function(req, res) {
         if(err) {
             res.status(500).send(err);
         } else {
-            res.status(201).end();
+            res.json({ status: 201 });
         }
     });
 };
@@ -26,8 +26,9 @@ exports.getAll = function(req, res) {
 };
 
 exports.getById = function(req, res) {
+    const _id = req.user.id;
 
-    User.findOne({ id: req.user.id }, { _id: 0, username: 1, email: 1 }, function(err, user) {
+    User.findOne({ id: _id }, { _id: 0, username: 1, email: 1 }, function(err, user) {
         if(err) {
             res.status(500).end();
             throw err;
@@ -65,16 +66,11 @@ exports.parId = function(req, res, next, _id) {
     User.findOne({ id: _id }, function(err, user) {
         if(err) {
             return next(err);
+        } else if(user == null) {
+            res.status(204).end();
         } else {
-            if(user != null) {
-                req.user = user;
-                next();
-            } else {
-                console.log('Find not found for id user');
-
-                res.status(204);
-                res.json({ message: 'Find not found for id user' });
-            }
-        }
+            req.user = user;
+            next();
+        }   
     });
 };
