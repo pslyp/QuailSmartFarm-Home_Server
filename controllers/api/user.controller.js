@@ -49,10 +49,10 @@ exports.login = function(req, res) {
             throw err;
         } else {
             if(user == null) {
-                res.status(401).json({ status: 401 });
+                res.json({ status: 401 });
             } else if(_password != user.password) {
                 // res.json({ message: "Success" });
-                res.status(416).json({ status: 416 });
+                res.json({ status: 416 });
             } else {
                 const payload = { id: user.id, name: user.username }
                 const token = verify.genToken(payload)
