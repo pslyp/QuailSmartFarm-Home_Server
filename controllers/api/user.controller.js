@@ -8,7 +8,7 @@ exports.create = function(req, res) {
         if(err) {
             res.status(500).send(err);
         } else {
-            res.json({ status: 201 });
+            res.status(201).end();
         }
     });
 };
@@ -56,11 +56,10 @@ exports.login = function(req, res) {
                 const token = verify.genToken(payload)
 
                 res.json({ 
-                    status: 200,
                     id: user.id,
                     username: user.username,
                     token: token 
-                })
+                });
             }
         }
     });
