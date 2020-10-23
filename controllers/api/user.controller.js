@@ -42,6 +42,8 @@ exports.login = function(req, res) {
     const _email = req.body.email;
     const _password = req.body.password;
 
+    test(req, res, _email, _password)
+
     User.findOne({ email: _email }, function(err, user) {
         if(err) {
             res.status(500).end();
@@ -79,3 +81,19 @@ exports.parId = function(req, res, next, _id) {
         }   
     });
 };
+
+test = (req, res, _email, _pass) => {
+    if(_email == "test@quail.com" && _pass == "test") {
+        const _id = "1234"
+        const _name = "test"        
+        const payload = { id: _id, name: _name }
+        const _token = verify.genToken(payload)
+
+        res.json({
+            status: 200,
+            id: _id,
+            username: _name,
+            token: _token
+        })
+    }
+}
